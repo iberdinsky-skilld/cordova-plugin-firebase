@@ -5,6 +5,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +20,9 @@ import android.graphics.Color;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Map;
 import java.util.Random;
 
@@ -167,10 +172,25 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
                 }
             }
 
+            if (bundle.getString("image", null) != null) {
+                Bitmap remote_picture = null;
+                try {
+                    remote_picture = BitmapFactory.decodeStream((InputStream) new URL(bundle.getString("image")).getContent());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                NotificationCompat.BigPictureStyle style = new NotificationCompat.BigPictureStyle();
+                style.bigPicture(remote_picture)
+                    .setBigContentTitle(title)
+                    .setSummaryText(messageBody);
+                notificationBuilder.setStyle(style);
+            } else {
+                notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(messageBody));
+            }
+
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
                 int accentID = getResources().getIdentifier("accent", "color", getPackageName());
                 notificationBuilder.setColor(getResources().getColor(accentID, null));
-                
             }
 
             Notification notification = notificationBuilder.build();

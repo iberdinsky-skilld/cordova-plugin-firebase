@@ -1,3 +1,8 @@
+# Forked Repository
+
+This is a fork from https://github.com/arnesson/cordova-plugin-firebase to add image capabilities for android notifications.
+
+
 [![Build Status](https://travis-ci.org/arnesson/cordova-plugin-firebase.svg?branch=master)](https://travis-ci.org/arnesson/cordova-plugin-firebase)
 
 # cordova-plugin-firebase
@@ -118,6 +123,22 @@ On Android Lollipop and above you can also set the accent color for the notifica
     <color name="primary_dark">#FF220022</color>
     <color name="accent">#FF00FFFF</color>
 </resources>
+```
+
+## Showing big image in notification (Android only!)
+
+If you want to send Big Picture Notification, you need to send data only message (without notification) with `image` field.
+
+
+```
+{
+    "to" : ...,
+    "data" : {
+      "title":"Notification Title",
+      "text":"Notification Body",
+      "image": "https://static.pexels.com/photos/4825/red-love-romantic-flowers.jpg"
+    }
+}
 ```
 
 
