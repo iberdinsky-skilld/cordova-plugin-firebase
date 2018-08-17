@@ -94,6 +94,19 @@ xmlns:android="http://schemas.android.com/apk/res/android">
 
 		<header-file src="src/ios/Firebase/Firebase.h" />
 
+		<!--BEGIN_MODULE NOTIFICATIONS-->
+		<framework src="UserNotifications.framework" />
+
+		<config-file target="*-Info.plist" parent="NSAppTransportSecurity">
+			<string>This app requires NSAppTransportSecurity access to function properly.</string>
+		</config-file>
+
+		<header-file src="src/ios/NotificationService.h" />
+		<source-file src="src/ios/NotificationService.m" />
+
+		<!--END_MODULE NOTIFICATIONS-->
+
+
 		<framework custom="true" src="src/ios/Firebase/Analytics/FirebaseAnalytics.framework" />
 		<framework custom="true" src="src/ios/Firebase/Analytics/FirebaseCore.framework" />
 		<framework custom="true" src="src/ios/Firebase/Analytics/FirebaseCoreDiagnostics.framework" />
