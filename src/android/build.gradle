@@ -1,6 +1,11 @@
 buildscript {
     repositories {
+        jcenter()
         mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:+'
+        classpath 'com.google.gms:google-services:4.0.2'
     }
 }
 repositories {
@@ -16,4 +21,8 @@ dependencies {
     compile('com.crashlytics.sdk.android:crashlytics:2.9.1@aar') {
        transitive = true
     }
+}
+
+ext.postBuildExtras = {
+    apply plugin: 'com.google.gms.google-services'
 }
