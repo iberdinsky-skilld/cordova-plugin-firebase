@@ -23,6 +23,4 @@ dependencies {
     }
 }
 
-ext.postBuildExtras = {
-    apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
-}
+apply plugin: com.google.gms.googleservices.GoogleServicesPlugin
