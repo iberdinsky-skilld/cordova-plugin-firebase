@@ -72,18 +72,18 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
 
         // TODO(developer): Handle FCM messages here.
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
-        String title;
-        String text;
-        String id;
-        String sound = null;
-        String lights = null;
+        String title = "";
+        String text = "";
+        String id = "";
+        String sound = "";
+        String lights = "";
         Map<String, String> data = remoteMessage.getData();
 
         if (remoteMessage.getNotification() != null) {
             title = remoteMessage.getNotification().getTitle();
             text = remoteMessage.getNotification().getBody();
             id = remoteMessage.getMessageId();
-        } else {
+        } else if (data != null) {
             title = data.get("title");
             text = data.get("text");
             id = data.get("id");
@@ -109,12 +109,10 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
         Log.d(TAG, "Notification Message Lights: " + lights);
 
         // TODO: Add option to developer to configure if show notification when app on foreground
-        if (!TextUtils.isEmpty(text) || !TextUtils.isEmpty(title) || (!data.isEmpty())) {
-            // boolean showNotification = (FirebasePlugin.inBackground() || !FirebasePlugin.hasNotificationsCallback()) && (!TextUtils.isEmpty(text) || !TextUtils.isEmpty(title));
-            boolean showNotification = (!TextUtils.isEmpty(text) || !TextUtils.isEmpty(title));
+        if (!TextUtils.isEmpty(text) || !TextUtils.isEmpty(title) || (data != null && !data.isEmpty())) {
+            boolean showNotification = !TextUtils.isEmpty(title);
             sendNotification(id, title, text, data, showNotification, sound, lights);
         }
-
     }
 
     private void sendNotification(String id, String title, String messageBody, Map<String, String> data, boolean showNotification, String sound, String lights) {
