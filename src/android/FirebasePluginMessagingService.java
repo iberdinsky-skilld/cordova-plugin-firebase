@@ -23,6 +23,7 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -157,11 +158,12 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
                 Log.d(TAG, "Sound was null ");
             }
 
+            int lightArgb = 0;
             if (lights != null) {
                 try {
                     String[] lightsComponents = lights.replaceAll("\\s", "").split(",");
                     if (lightsComponents.length == 3) {
-                        int lightArgb = Color.parseColor(lightsComponents[0]);
+                        lightArgb = Color.parseColor(lightsComponents[0]);
                         int lightOnMs = Integer.parseInt(lightsComponents[1]);
                         int lightOffMs = Integer.parseInt(lightsComponents[2]);
 
@@ -204,8 +206,25 @@ public class FirebasePluginMessagingService extends FirebaseMessagingService {
 
             // Since android Oreo notification channel is needed.
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
-                notificationManager.createNotificationChannel(channel);
+                List<NotificationChannel> channels = notificationManager.getNotificationChannels();
+
+                boolean channelExists = false;
+                for (int i = 0; i < channels.size(); i++) {
+                    if (channelId.equals(channels.get(i).getId())) {
+                        channelExists = true;
+                    }
+                }
+
+                if (!channelExists) {
+                    NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH);
+                    channel.enableLights(true);
+                    channel.enableVibration(true);
+                    channel.setShowBadge(true);
+                    if (lights != null) {
+                        channel.setLightColor(lightArgb);
+                    }
+                    notificationManager.createNotificationChannel(channel);
+                }
             }
 
             notificationManager.notify(id.hashCode(), notification);
